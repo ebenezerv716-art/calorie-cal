@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Health Calculator</title>
+<style>
+    body {
+        font-family: Arial;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+    h2 {
+        text-align: center;
+    }
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+    }
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #218838;
+    }
+    .result {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Health & Food Calculator</h2>
+
+    <!-- BMI -->
+    <h3>BMI Calculator</h3>
+    <input type="number" id="weight" placeholder="Weight (kg)">
+    <input type="number" id="height" placeholder="Height (cm)">
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <div class="result" id="bmiResult"></div>
+
+    <!-- BMR -->
+    <h3>BMR & Calories</h3>
+    <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
+    <input type="number" id="age" placeholder="Age">
+    <select id="activity">
+        <option value="1.2">Sedentary</option>
+        <option value="1.375">Light Activity</option>
+        <option value="1.55">Moderate</option>
+        <option value="1.725">Active</option>
+    </select>
+    <button onclick="calculateBMR()">Calculate BMR & Calories</button>
+    <div class="result" id="bmrResult"></div>
+
+    <!-- Body Fat -->
+    <h3>Body Fat Estimate</h3>
+    <button onclick="calculateBodyFat()">Estimate Body Fat</button>
+    <div class="result" id="fatResult"></div>
+
+    <!-- Food Calories -->
+    <h3>Food Calories</h3>
+    <select id="food">
+        <option value="52">Apple (100g - 52 cal)</option>
+        <option value="89">Banana (100g - 89 cal)</option>
+        <option value="41">Carrot (100g - 41 cal)</option>
+        <option value="16">Cucumber (100g - 16 cal)</option>
+        <option value="77">Rice (100g - 77 cal)</option>
+        <option value="120">Sambar Rice (100g - 120 cal)</option>
+        <option value="250">Biriyani (100g - 250 cal)</option>
+    </select>
+    <input type="number" id="foodWeight" placeholder="Weight (grams)">
+    <button onclick="calculateFood()">Calculate Food Calories</button>
+    <div class="result" id="foodResult"></div>
+
+</div>
+
+<script>
+function calculateBMI() {
+    let w = document.getElementById("weight").value;
+    let h = document.getElementById("height").value / 100;
+
+    let bmi = (w / (h * h)).toFixed(2);
+    document.getElementById("bmiResult").innerHTML = "BMI: " + bmi;
+}
+
+function calculateBMR() {
+    let w = document.getElementById("weight").value;
+    let h = document.getElementById("height").value;
+    let age = document.getElementById("age").value;
+    let gender = document.getElementById("gender").value;
+    let activity = document.getElementById("activity").value;
+
+    let bmr;
+
+    if (gender === "male") {
+        bmr = 10*w + 6.25*h - 5*age + 5;
+    } else {
+        bmr = 10*w + 6.25*h - 5*age - 161;
+    }
+
+    let calories = (bmr * activity).toFixed(2);
+
+    document.getElementById("bmrResult").innerHTML =
+        "BMR: " + bmr.toFixed(2) + "<br>Daily Calories: " + calories;
+}
+
+function calculateBodyFat() {
+    let bmi = document.getElementById("bmiResult").innerText.replace("BMI: ", "");
+    let age = document.getElementById("age").value;
+
+    if (!bmi || !age) {
+        document.getElementById("fatResult").innerHTML = "Enter BMI & Age first";
+        return;
+    }
+
+    let fat = (1.20 * bmi + 0.23 * age - 16.2).toFixed(2);
+
+    document.getElementById("fatResult").innerHTML =
+        "Estimated Body Fat: " + fat + "%";
+}
+
+function calculateFood() {
+    let calPer100 = document.getElementById("food").value;
+    let weight = document.getElementById("foodWeight").value;
+
+    let total = (calPer100 * weight / 100).toFixed(2);
+
+    document.getElementById("foodResult").innerHTML =
+        "Calories: " + total + " kcal";
+}
+</script>
+
+</body>
+</html>
